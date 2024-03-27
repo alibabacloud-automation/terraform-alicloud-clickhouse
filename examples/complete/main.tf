@@ -25,6 +25,39 @@ module "example" {
   source = "../.."
 
   #alicloud_click_house_db_cluster
+  create_cluster               = true
+  db_cluster_version           = "22.8.5.29"
+  category                     = "Basic"
+  db_cluster_class             = "S8"
+  db_cluster_description       = var.db_cluster_description
+  db_node_group_count          = 1
+  payment_type                 = "PayAsYouGo"
+  db_node_storage              = "500"
+  storage_type                 = "cloud_essd"
+  vswitch_id                   = module.vpc.this_vswitch_ids[0]
+  vpc_id                       = module.vpc.this_vpc_id
+  db_cluster_access_white_list = var.db_cluster_access_white_list
+
+
+  #alicloud_click_house_account
+  create_account      = true
+  account_description = var.account_description
+  account_name        = "testaccountname"
+  account_password    = var.account_password
+  ddl_authority       = true
+  dml_authority       = "all"
+  allow_databases     = "db1"
+  allow_dictionaries  = "dt1"
+}
+
+resource "alicloud_kms_key" "default" {
+  pending_window_in_days = 7
+}
+
+module "example-with-encryption" {
+  source = "../.."
+
+  #alicloud_click_house_db_cluster
   create_cluster         = true
   db_cluster_version     = "22.8.5.29"
   category               = "Basic"
@@ -35,11 +68,10 @@ module "example" {
   db_node_storage        = "500"
   storage_type           = "cloud_essd"
   vswitch_id             = module.vpc.this_vswitch_ids[0]
-  db_cluster_access_white_list = var.db_cluster_access_white_list
-  #alicloud_click_house_account
-  create_account      = true
-  account_description = var.account_description
-  account_name        = "testaccountname"
-  account_password    = var.account_password
+  vpc_id                 = module.vpc.this_vpc_id
+  encryption_type        = "CloudDisk"
+  encryption_key         = alicloud_kms_key.default.id
 
+  #alicloud_click_house_account
+  create_account = false
 }
