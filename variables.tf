@@ -9,11 +9,11 @@ variable "create_cluster" {
 
 variable "db_cluster_access_white_list" {
   description = "(Optional) The whitelist of the clickhouse"
-  type        = list(object({
+  type = list(object({
     db_cluster_ip_array_name = string
-    security_ip_list = string
+    security_ip_list         = string
   }))
-  default     = []
+  default = []
 }
 
 variable "db_cluster_version" {
@@ -85,7 +85,53 @@ variable "storage_type" {
 }
 
 variable "vswitch_id" {
-  description = "(Optional, ForceNew) The vswitch id of DBCluster."
+  description = "(Required, ForceNew) The vswitch id of DBCluster."
+  type        = string
+  default     = ""
+}
+
+variable "encryption_key" {
+  description = "(Optional, ForceNew) Key management service KMS key ID. It is required when encryption_type is CloudDisk."
+  type        = string
+  default     = ""
+}
+
+variable "encryption_type" {
+  description = "(Optional, ForceNew) Currently only supports ECS disk encryption, with a value of CloudDisk, not encrypted when empty."
+  type        = string
+  default     = null
+}
+
+variable "payment_duration_unit" {
+  description = "Pre-paid cluster of the pay-as-you-go cycle. It is valid and required when payment_type is `Subscription`. Valid values: `Month`, `Year`."
+  type        = string
+  default     = "Month"
+}
+
+variable "payment_duration" {
+  description = "(Optional, ForceNew) The used time of DBCluster. It is valid and required when payment_type is `Subscription`."
+  type        = string
+  default     = "1"
+}
+
+variable "status" {
+  description = "(Optional) The status of the resource. Valid values: `Running`,`Creating`,`Deleting`,`Restarting`,`Preparing`."
+  type        = string
+  default     = null
+}
+variable "maintain_time" {
+  description = "(Optional) The maintenance window of DBCluster. Valid format: `hh:mmZ-hh:mm Z`."
+  type        = string
+  default     = ""
+}
+variable "zone_id" {
+  description = "(Optional, ForceNew) The zone ID of the instance."
+  type        = string
+  default     = ""
+}
+
+variable "vpc_id" {
+  description = "(Required, ForceNew) The id of the VPC."
   type        = string
   default     = ""
 }
@@ -119,6 +165,42 @@ variable "account_name" {
 
 variable "account_password" {
   description = "(Required) The account password: uppercase letters, lowercase letters, lowercase letters, numbers, and special characters (special character! #$%^& author (s):_+-=) in a length of 8-32 bit."
+  type        = string
+  default     = ""
+}
+
+variable "dml_authority" {
+  description = "(Optional) Specifies whether to grant DML permissions to the database account. Valid values: `all` and `readOnly,modify`."
+  type        = string
+  default     = ""
+}
+
+variable "ddl_authority" {
+  description = "(Optional) Specifies whether to grant DDL permissions to the database account. Valid values: `true` and `false`."
+  type        = bool
+  default     = null
+}
+
+variable "allow_databases" {
+  description = "(Optional) The list of databases to which you want to grant permissions. Separate databases with commas (,)."
+  type        = string
+  default     = ""
+}
+
+variable "total_databases" {
+  description = "(Optional) The list of all databases. Separate databases with commas (,)."
+  type        = string
+  default     = ""
+}
+
+variable "allow_dictionaries" {
+  description = "(Optional) The list of dictionaries to which you want to grant permissions. Separate dictionaries with commas (,)."
+  type        = string
+  default     = ""
+}
+
+variable "total_dictionaries" {
+  description = "(Optional) The list of all dictionaries. Separate dictionaries with commas (,)."
   type        = string
   default     = ""
 }
